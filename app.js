@@ -35,54 +35,38 @@ function createGaze(directions) {
   return createPage('迷路ゲーム', body);
 }
 
-var index = createPage('My Web Apps',
-    '<a href="maze1.html">迷路ゲーム</a>');
-var maze1 = createGaze({
-  down: 'maze2.html'
-});
-var maze2 = createGaze({
-  up: 'maze1.html',
-  right: 'maze3.html',
-  down: 'maze4.html',
-  left: 'maze5.html'
-});
-var maze3 = createGaze({
-  right: 'maze6.html',
-  left: 'maze2.html'
-});
-var maze4 = createGaze({
-  up: 'maze2.html',
-});
-var maze5 = createGaze({
-  right: 'maze2.html',
-});
-var maze6 = createGaze();
+var pages = {
+  index: createPage('My Web Apps',
+    '<a href="maze1.html">迷路ゲーム</a>'),
+  '/maze1.html': createGaze({
+    down: 'maze2.html'
+  }),
+  '/maze2.html': createGaze({
+    up: 'maze1.html',
+    right: 'maze3.html',
+    down: 'maze4.html',
+    left: 'maze5.html'
+  }),
+  '/maze3.html': createGaze({
+    right: 'maze6.html',
+    left: 'maze2.html'
+  }),
+  '/maze4.html': createGaze({
+    up: 'maze2.html',
+  }),
+  '/maze5.html': createGaze({
+    right: 'maze2.html',
+  }),
+  '/maze6.html': createGaze()
+}
 
 http.createServer(function (req, res) {
   var pathname = url.parse(req.url).pathname;
   res.writeHead(200, {'Content-Type': 'text/html'});
-  switch (pathname) {
-    case '/maze1.html':
-      res.end(maze1);
-      break;
-    case '/maze2.html':
-      res.end(maze2);
-      break;
-    case '/maze3.html':
-      res.end(maze3);
-      break;
-    case '/maze4.html':
-      res.end(maze4);
-      break;
-    case '/maze5.html':
-      res.end(maze5);
-      break;
-    case '/maze6.html':
-      res.end(maze6);
-      break;
-    default:
-      res.end(index);
-      break;
+  if (pages[pathname]) {
+    res.end(pages[pathname]);
+  } else {
+    res.end(pages.index);
   }
 }).listen(3000, '127.0.0.1');
 console.log('Server running at http://127.0.0.1:3000/');
