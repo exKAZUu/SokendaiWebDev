@@ -20,7 +20,7 @@ var maze1 = '\
   </head>\n\
   <body>\n\
     どの方向に進む？\n\
-  　　<ul>\n\
+    <ul>\n\
       <li><a href="maze2.html">↓</a>\n\
     </ul>\n\
   </body>\n\
@@ -33,8 +33,8 @@ var maze2 = '\
     <title>迷路ゲーム</title>\n\
   </head>\n\
   <body>\n\
-  	どの方向に進む？\n\
-  　　<ul>\n\
+    どの方向に進む？\n\
+    <ul>\n\
       <li><a href="maze1.html">↑</a>\n\
       <li><a href="maze3.html">→</a>\n\
       <li><a href="maze4.html">↓</a>\n\
@@ -51,7 +51,7 @@ var maze3 = '\
   </head>\n\
   <body>\n\
     どの方向に進む？\n\
-  　　<ul>\n\
+    <ul>\n\
       <li><a href="maze6.html">→</a>\n\
       <li><a href="maze2.html">←</a>\n\
     </ul>\n\
@@ -66,7 +66,7 @@ var maze4 = '\
   </head>\n\
   <body>\n\
     どの方向に進む？\n\
-  　　<ul>\n\
+    <ul>\n\
       <li><a href="maze2.html">↑</a>\n\
     </ul>\n\
   </body>\n\
@@ -80,7 +80,7 @@ var maze5 = '\
   </head>\n\
   <body>\n\
     どの方向に進む？\n\
-  　　<ul>\n\
+    <ul>\n\
       <li><a href="maze2.html">→</a>\n\
     </ul>\n\
   </body>\n\
