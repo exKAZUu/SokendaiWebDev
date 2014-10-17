@@ -2,16 +2,15 @@
   "name": "SokendaiWebDev",
   "version": "0.0.1",
   "private": true,
+  "description": "",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "*",
-    "jade": "*",
-    "stylus": "*"
+    "express": "~4.9.x"
   },
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
+    "node": "0.10.x"
   }
 }
