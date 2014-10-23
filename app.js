@@ -17,16 +17,16 @@ function createGaze(directions) {
   if (directions) {
     body = 'どの方向に進む？<ul>';
     if (directions.up) {
-      body += '<li><a href="' + directions.up + '">↑</a>'
+      body += '<li><a href="/maze?id=' + directions.up + '">↑</a>'
     }
     if (directions.right) {
-      body += '<li><a href="' + directions.right + '">→</a>'
+      body += '<li><a href="/maze?id=' + directions.right + '">→</a>'
     }
     if (directions.down) {
-      body += '<li><a href="' + directions.down + '">↓</a>'
+      body += '<li><a href="/maze?id=' + directions.down + '">↓</a>'
     }
     if (directions.left) {
-      body += '<li><a href="' + directions.left + '">←</a>'
+      body += '<li><a href="/maze?id=' + directions.left + '">←</a>'
     }
     body += '</ul>';
   } else {
@@ -37,33 +37,37 @@ function createGaze(directions) {
 
 var pages = {
   '/': createPage('My Web Apps',
-    '<a href="maze1">迷路ゲーム</a>'),
-  '/maze1': createGaze({
-    down: 'maze2'
+    '<a href="/maze?id=1">迷路ゲーム</a>'),
+  '1': createGaze({
+    down: '2'
   }),
-  '/maze2': createGaze({
-    up: 'maze1',
-    right: 'maze3',
-    down: 'maze4',
-    left: 'maze5'
+  '2': createGaze({
+    up: '1',
+    right: '3',
+    down: '4',
+    left: '5'
   }),
-  '/maze3': createGaze({
-    right: 'maze6',
-    left: 'maze2'
+  '3': createGaze({
+    right: '6',
+    left: '2'
   }),
-  '/maze4': createGaze({
-    up: 'maze2',
+  '4': createGaze({
+    up: '2',
   }),
-  '/maze5': createGaze({
-    right: 'maze2',
+  '5': createGaze({
+    right: '2',
   }),
-  '/maze6': createGaze()
+  '6': createGaze()
 }
 
-app.get(/^\/$|^\/maze\d+$/, function(req, res) {
-  console.log(req.path);
+app.get('/', function(req, res) {
   res.set('Content-Type', 'text/html');
-  res.send(pages[req.path]);
+  res.send(pages['/']);
+});
+
+app.get('/maze', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages[req.query.id]);
 });
 
 var server = app.listen(3000, function() {
