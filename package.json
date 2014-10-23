@@ -8,6 +8,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "body-parser": "^1.9.1",
     "express": "^4.9.8"
   },
   "engines": {

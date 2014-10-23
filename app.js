@@ -1,4 +1,5 @@
 var express = require('express'),
+  bodyParser = require('body-parser'),
   app = express();
 
 function createPage(title, body) {
@@ -16,7 +17,7 @@ function createGaze(currentId, directions) {
   var body;
   if (directions) {
     body = 'どの方向に進む？';
-    body += '<form action="/maze" method="get">';
+    body += '<form action="/maze" method="post">';
     body += '<input type="hidden" name="from" value="' + currentId + '">';
     if (directions.up) {
       body += '<input type="submit" name="dir" value="up"><br />'
@@ -60,21 +61,27 @@ var maze = {
   '6': null
 }
 
+// POSTデータをパースするミドルウェアを設定
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/', function(req, res) {
   res.set('Content-Type', 'text/html');
   res.send(createPage('My Web Apps',
-    '<a href="/maze?from=1">迷路ゲーム</a>'));
+    '<form action="/maze" method="post">\
+    <input type="hidden" name="from" value="1">\
+    <input type="submit" name="dir" value="迷路ゲーム"></form>'));
 });
 
-app.get('/maze', function(req, res) {
+app.post('/maze', function(req, res) {
   res.set('Content-Type', 'text/html');
-  var dirs = maze[req.query.from];
+  var dirs = maze[req.body.from];
   // 移動前の部屋が存在するかどうか確認
   if (dirs) {
-    var nextId = req.query.from;
+    var nextId = req.body.from;
     // 移動前の部屋から見て、有効な移動先を指定しているか確認
-    if (req.query.dir && dirs[req.query.dir]) {
-      nextId = dirs[req.query.dir];
+    if (req.body.dir && dirs[req.body.dir]) {
+      nextId = dirs[req.body.dir];
     }
     res.send(createGaze(nextId, maze[nextId]));
   } else {
