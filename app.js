@@ -1,5 +1,6 @@
-var express = require('express');
-var app = express();
+var express = require('express'),
+  params = require('express-params'),
+  app = express();
 
 function createPage(title, body) {
   return '\
@@ -60,19 +61,7 @@ var pages = {
   '/maze6': createGaze()
 }
 
-app.param(function(name, fn){
-  if (fn instanceof RegExp) {
-    return function(req, res, next, val){
-      var captures;
-      if (captures = fn.exec(String(val))) {
-        req.params[name] = captures;
-        next();
-      } else {
-        next('route');
-      }
-    }
-  }
-});
+params.extend(app);
 
 app.get('/', function(req, res) {
   res.set('Content-Type', 'text/html');
