@@ -12,21 +12,21 @@ function createPage(title, body) {
 </html>';
 }
 
-function createGaze(directions) {
+function createGaze(currentId, directions) {
   var body;
   if (directions) {
     body = 'どの方向に進む？<ul>';
     if (directions.up) {
-      body += '<li><a href="/maze?id=' + directions.up + '">↑</a>'
+      body += '<li><a href="/maze?from=' + currentId + '&dir=up">↑</a>'
     }
     if (directions.right) {
-      body += '<li><a href="/maze?id=' + directions.right + '">→</a>'
+      body += '<li><a href="/maze?from=' + currentId + '&dir=right">→</a>'
     }
     if (directions.down) {
-      body += '<li><a href="/maze?id=' + directions.down + '">↓</a>'
+      body += '<li><a href="/maze?from=' + currentId + '&dir=down">↓</a>'
     }
     if (directions.left) {
-      body += '<li><a href="/maze?id=' + directions.left + '">←</a>'
+      body += '<li><a href="/maze?from=' + currentId + '&dir=left">←</a>'
     }
     body += '</ul>';
   } else {
@@ -35,41 +35,46 @@ function createGaze(directions) {
   return createPage('迷路ゲーム', body);
 }
 
-var pages = {
-  '/': createPage('My Web Apps',
-    '<a href="/maze?id=1">迷路ゲーム</a>'),
-  '1': createGaze({
+var maze = {
+  '1': {
     down: '2'
-  }),
-  '2': createGaze({
+  },
+  '2': {
     up: '1',
     right: '3',
     down: '4',
     left: '5'
-  }),
-  '3': createGaze({
+  },
+  '3': {
     right: '6',
     left: '2'
-  }),
-  '4': createGaze({
+  },
+  '4': {
     up: '2',
-  }),
-  '5': createGaze({
+  },
+  '5': {
     right: '2',
-  }),
-  '6': createGaze()
+  },
+  '6': null
 }
 
 app.get('/', function(req, res) {
   res.set('Content-Type', 'text/html');
-  res.send(pages['/']);
+  res.send(createPage('My Web Apps',
+    '<a href="/maze?from=1">迷路ゲーム</a>'));
 });
 
 app.get('/maze', function(req, res) {
   res.set('Content-Type', 'text/html');
-  // 指定した部屋が存在するかどうか確認
-  if (pages[req.query.id]) {
-    res.send(pages[req.query.id]);
+  var dirs = maze[req.query.from];
+  // 移動前の部屋が存在するかどうか確認
+  if (dirs) {
+    var nextId = req.query.from;
+    // 移動前の部屋から見て、有効な移動先を指定しているか確認
+    if (req.query.dir && dirs[req.query.dir]) {
+      nextId = dirs[req.query.dir];
+    }
+    res.send(createGaze(nextId, maze[nextId]));
   } else {
     // 不正なコマンド入力を受け取った場合の対応
     res.status(404).send('Wrong Maze ID.');
