@@ -1,5 +1,4 @@
 var express = require('express'),
-  params = require('express-params'),
   app = express();
 
 function createPage(title, body) {
@@ -61,18 +60,10 @@ var pages = {
   '/maze6': createGaze()
 }
 
-params.extend(app);
-
-app.get('/', function(req, res) {
+app.get(/^\/$|^\/maze\d+$/, function(req, res) {
+  console.log(req.path);
   res.set('Content-Type', 'text/html');
-  res.send(pages['/']);
-});
-
-app.param('mazeid', /^maze\d+$/)
-
-app.get('/:mazeid', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/' + req.params.mazeid]);
+  res.send(pages[req.path]);
 });
 
 var server = app.listen(3000, function() {
