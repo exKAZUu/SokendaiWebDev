@@ -1,5 +1,5 @@
-var http = require('http');
-var url = require('url');
+var express = require('express');
+var app = express();
 
 function createPage(title, body) {
   return '\
@@ -15,7 +15,7 @@ function createPage(title, body) {
 function createGaze(directions) {
   var body;
   if (directions) {
-  	body = 'どの方向に進む？<ul>';
+    body = 'どの方向に進む？<ul>';
     if (directions.up) {
       body += '<li><a href="' + directions.up + '">↑</a>'
     }
@@ -37,36 +37,66 @@ function createGaze(directions) {
 
 var pages = {
   index: createPage('My Web Apps',
-    '<a href="maze1.html">迷路ゲーム</a>'),
-  '/maze1.html': createGaze({
-    down: 'maze2.html'
+    '<a href="maze1">迷路ゲーム</a>'),
+  '/maze1': createGaze({
+    down: 'maze2'
   }),
-  '/maze2.html': createGaze({
-    up: 'maze1.html',
-    right: 'maze3.html',
-    down: 'maze4.html',
-    left: 'maze5.html'
+  '/maze2': createGaze({
+    up: 'maze1',
+    right: 'maze3',
+    down: 'maze4',
+    left: 'maze5'
   }),
-  '/maze3.html': createGaze({
-    right: 'maze6.html',
-    left: 'maze2.html'
+  '/maze3': createGaze({
+    right: 'maze6',
+    left: 'maze2'
   }),
-  '/maze4.html': createGaze({
-    up: 'maze2.html',
+  '/maze4': createGaze({
+    up: 'maze2',
   }),
-  '/maze5.html': createGaze({
-    right: 'maze2.html',
+  '/maze5': createGaze({
+    right: 'maze2',
   }),
-  '/maze6.html': createGaze()
+  '/maze6': createGaze()
 }
 
-http.createServer(function (req, res) {
-  var pathname = url.parse(req.url).pathname;
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  if (pages[pathname]) {
-    res.end(pages[pathname]);
-  } else {
-    res.end(pages.index);
-  }
-}).listen(3000, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:3000/');
+app.get('/', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages.index);
+});
+
+app.get('/maze1', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze1']);
+});
+
+app.get('/maze2', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze2']);
+});
+
+app.get('/maze3', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze3']);
+});
+
+app.get('/maze4', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze4']);
+});
+
+app.get('/maze5', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze5']);
+});
+
+app.get('/maze6', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/maze6']);
+});
+
+var server = app.listen(3000, function() {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Server running at http://%s:%s', host, port);
+});
