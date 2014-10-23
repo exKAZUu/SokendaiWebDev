@@ -67,7 +67,13 @@ app.get('/', function(req, res) {
 
 app.get('/maze', function(req, res) {
   res.set('Content-Type', 'text/html');
-  res.send(pages[req.query.id]);
+  // 指定した部屋が存在するかどうか確認
+  if (pages[req.query.id]) {
+    res.send(pages[req.query.id]);
+  } else {
+    // 不正なコマンド入力を受け取った場合の対応
+    res.status(404).send('Wrong Maze ID.');
+  }
 });
 
 var server = app.listen(3000, function() {
