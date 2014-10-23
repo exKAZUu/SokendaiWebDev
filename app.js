@@ -30,7 +30,7 @@ function createGaze(directions) {
     }
     body += '</ul>';
   } else {
-    body = 'ゴール！<br /><a href="index.html">トップページへ</a>'
+    body = 'ゴール！<br /><a href="/">トップページへ</a>'
   }
   return createPage('迷路ゲーム', body);
 }
