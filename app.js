@@ -60,10 +60,26 @@ var pages = {
   '/maze6': createGaze()
 }
 
+app.param(function(name, fn){
+  if (fn instanceof RegExp) {
+    return function(req, res, next, val){
+      var captures;
+      if (captures = fn.exec(String(val))) {
+        req.params[name] = captures;
+        next();
+      } else {
+        next('route');
+      }
+    }
+  }
+});
+
 app.get('/', function(req, res) {
   res.set('Content-Type', 'text/html');
   res.send(pages['/']);
 });
+
+app.param('mazeid', /^maze\d+$/)
 
 app.get('/:mazeid', function(req, res) {
   res.set('Content-Type', 'text/html');
