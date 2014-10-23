@@ -36,7 +36,7 @@ function createGaze(directions) {
 }
 
 var pages = {
-  index: createPage('My Web Apps',
+  '/': createPage('My Web Apps',
     '<a href="maze1">迷路ゲーム</a>'),
   '/maze1': createGaze({
     down: 'maze2'
@@ -60,40 +60,12 @@ var pages = {
   '/maze6': createGaze()
 }
 
-app.get('/', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages.index);
-});
-
-app.get('/maze1', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze1']);
-});
-
-app.get('/maze2', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze2']);
-});
-
-app.get('/maze3', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze3']);
-});
-
-app.get('/maze4', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze4']);
-});
-
-app.get('/maze5', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze5']);
-});
-
-app.get('/maze6', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(pages['/maze6']);
-});
+for (var key in pages) {
+  app.get(key, function(req, res) {
+    res.set('Content-Type', 'text/html');
+    res.send(pages[req.path]);
+  });
+}
 
 var server = app.listen(3000, function() {
   var host = server.address().address;
