@@ -15,20 +15,22 @@ function createPage(title, body) {
 function createGaze(currentId, directions) {
   var body;
   if (directions) {
-    body = 'どの方向に進む？<ul>';
+    body = 'どの方向に進む？';
+    body += '<form action="/maze" method="get">';
+    body += '<input type="hidden" name="from" value="' + currentId + '">';
     if (directions.up) {
-      body += '<li><a href="/maze?from=' + currentId + '&dir=up">↑</a>'
+      body += '<input type="submit" name="dir" value="up"><br />'
     }
     if (directions.right) {
-      body += '<li><a href="/maze?from=' + currentId + '&dir=right">→</a>'
+      body += '<input type="submit" name="dir" value="right"><br />'
     }
     if (directions.down) {
-      body += '<li><a href="/maze?from=' + currentId + '&dir=down">↓</a>'
+      body += '<input type="submit" name="dir" value="down"><br />'
     }
     if (directions.left) {
-      body += '<li><a href="/maze?from=' + currentId + '&dir=left">←</a>'
+      body += '<input type="submit" name="dir" value="left"><br />'
     }
-    body += '</ul>';
+    body += '</form>';
   } else {
     body = 'ゴール！<br /><a href="/">トップページへ</a>'
   }
