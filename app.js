@@ -60,12 +60,15 @@ var pages = {
   '/maze6': createGaze()
 }
 
-for (var key in pages) {
-  app.get(key, function(req, res) {
-    res.set('Content-Type', 'text/html');
-    res.send(pages[req.path]);
-  });
-}
+app.get('/', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/']);
+});
+
+app.get('/:mazeid', function(req, res) {
+  res.set('Content-Type', 'text/html');
+  res.send(pages['/' + req.params.mazeid]);
+});
 
 var server = app.listen(3000, function() {
   var host = server.address().address;
