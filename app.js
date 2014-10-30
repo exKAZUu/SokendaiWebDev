@@ -37,7 +37,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/maze', function(req, res) {
-  res.set('Content-Type', 'text/html');
   var dirs = maze[req.body.from];
   // 移動前の部屋が存在するかどうか確認
   if (dirs) {
