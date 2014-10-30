@@ -1,28 +1,46 @@
 var express = require('express'),
   bodyParser = require('body-parser'),
+  MongoClient = require('mongodb').MongoClient
   app = express();
 
-// res.render で省略するデフォルトの拡張子を設定
-app.set('view engine', 'ejs');
+// 以下のディレクトリを作成後，事前にMongoDBを起動
+// Windows: c:\data\db ディレクトリを事前に作成
+// Mac OS / Linux: /data/db ディレクトリを事前に作成
+// mongod --port 27017
+var mongodbUrl = 'mongodb://localhost:27017/chat';
+MongoClient.connect(mongodbUrl, function(err, db) {
+  console.log("Connected correctly to server");
+  var messages = db.collection('messages');
 
-// POSTデータをパースするミドルウェアを設定
-app.use(bodyParser.json({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
+  // res.render で省略するデフォルトの拡張子を設定
+  app.set('view engine', 'ejs');
 
-app.get('/', function(req, res) {
-  res.render('index', {
-    msg: "書き込みしよう！"
+  // POSTデータをパースするミドルウェアを設定
+  app.use(bodyParser.json({ extended: true }));
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.get('/', function(req, res) {
+    messages.find({}).toArray(function(err, messages) {
+      res.render('index', {
+        msgs: messages
+      });
+    });
   });
-});
 
-app.post('/', function(req, res) {
-  res.render('index', {
-    msg: req.body.message
+  app.post('/', function(req, res) {
+    messages.insert({ text: req.body.message }, function(err, result) {
+      messages.find({}).toArray(function(err, messages) {
+        res.render('index', {
+          msgs: messages
+        });
+      });
+    });
   });
-});
 
-var server = app.listen(3000, function() {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log('Server running at http://%s:%s', host, port);
+  var server = app.listen(3000, function() {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Server running at http://%s:%s', host, port);
+  });
+
 });

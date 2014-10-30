@@ -5,8 +5,8 @@
   </head>
   <body>
     <div>
-      <% if (msg) { %>
-        <div><%= msg %></div>
+      <% for (var i = 0; i < msgs.length; i++) { %>
+        <div><%= msgs[i].text %></div>
       <% } %>
     </div>
 
