@@ -4,9 +4,15 @@
     <title>My Web Apps</title>
   </head>
   <body>
-    <form action="/maze" method="post">
-      <input type="hidden" name="from" value="1">
-      <input type="submit" name="dir" value="迷路ゲーム">
+    <div>
+      <% if (msg) { %>
+        <div><%= msg %></div>
+      <% } %>
+    </div>
+
+    <form action="/" method="post">
+      <input type="text" name="message">
+      <input type="submit" name="dir" value="Send">
     </form>
   </body>
 </html>

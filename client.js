@@ -48,8 +48,8 @@ function createPostRequest(host, path, params) {
 }
 
 // sendHttpRequest を複数回書かないように
-//req = createPostRequest("localhost", "/maze", { from: 3, dir: "right" });
+//req = createPostRequest("localhost", "/", { message: "test" });
 //sendHttpRequest("localhost", 3000, req);
 
-req = createGetRequest("localhost", "/maze", { from: 3, dir: "right" });
+req = createGetRequest("localhost", "/", {});
 sendHttpRequest("localhost", 3000, req);
