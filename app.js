@@ -2,42 +2,6 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
-function createPage(title, body) {
-  return '\
-<!DOCTYPE html>\n\
-<html>\n\
-  <head>\n\
-    <title>' + title + '</title>\n\
-  </head>\n\
-  <body>' + body + '</body>\n\
-</html>';
-}
-
-function createGaze(currentId, directions) {
-  var body;
-  if (directions) {
-    body = 'どの方向に進む？';
-    body += '<form action="/maze" method="post">';
-    body += '<input type="hidden" name="from" value="' + currentId + '">';
-    if (directions.up) {
-      body += '<input type="submit" name="dir" value="up"><br />'
-    }
-    if (directions.right) {
-      body += '<input type="submit" name="dir" value="right"><br />'
-    }
-    if (directions.down) {
-      body += '<input type="submit" name="dir" value="down"><br />'
-    }
-    if (directions.left) {
-      body += '<input type="submit" name="dir" value="left"><br />'
-    }
-    body += '</form>';
-  } else {
-    body = 'ゴール！<br /><a href="/">トップページへ</a>'
-  }
-  return createPage('迷路ゲーム', body);
-}
-
 var maze = {
   '1': {
     down: '2'
@@ -61,16 +25,15 @@ var maze = {
   '6': null
 }
 
+// res.render で省略するデフォルトの拡張子を設定
+app.set('view engine', 'ejs');
+
 // POSTデータをパースするミドルウェアを設定
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', function(req, res) {
-  res.set('Content-Type', 'text/html');
-  res.send(createPage('My Web Apps',
-    '<form action="/maze" method="post">\
-    <input type="hidden" name="from" value="1">\
-    <input type="submit" name="dir" value="迷路ゲーム"></form>'));
+  res.render('index');
 });
 
 app.post('/maze', function(req, res) {
@@ -83,7 +46,10 @@ app.post('/maze', function(req, res) {
     if (req.body.dir && dirs[req.body.dir]) {
       nextId = dirs[req.body.dir];
     }
-    res.send(createGaze(nextId, maze[nextId]));
+    res.render('maze', {
+      currentId: nextId,
+      directions: maze[nextId]
+    });
   } else {
     // 不正なコマンド入力を受け取った場合の対応
     res.status(404).send('Wrong Maze ID.');
