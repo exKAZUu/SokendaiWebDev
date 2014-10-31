@@ -3,10 +3,11 @@ var express = require('express'),
   MongoClient = require('mongodb').MongoClient
   app = express();
 
-// 以下のディレクトリを作成後，事前にMongoDBを起動
+// 以下のディレクトリを手動で作成
 // Windows: c:\data\db ディレクトリを事前に作成
 // Mac OS / Linux: /data/db ディレクトリを事前に作成
-// mongod --port 27017
+// Windowsは C:\Program Files\MongoDB 2.6 Standard\bin にパスを通す
+// 次のコマンドでMongoDBを起動 mongod --port 27017
 var mongodbUrl = 'mongodb://localhost:27017/chat';
 MongoClient.connect(mongodbUrl, function(err, db) {
   console.log("Connected correctly to server");
