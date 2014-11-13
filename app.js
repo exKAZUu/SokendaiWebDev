@@ -1,7 +1,6 @@
 var express = require('express'),
   bodyParser = require('body-parser'),
-  mongodb = require('mongodb'),
-  MongoClient = mongodb.MongoClient,
+  mongoose = require('mongoose'),
   session = require('express-session'),
   MongoStore = require('connect-mongo')(session),
   app = express();
@@ -12,9 +11,20 @@ var express = require('express'),
 // Windowsは C:\Program Files\MongoDB 2.6 Standard\bin にパスを通す
 // 次のコマンドでMongoDBを起動 mongod --port 27017
 var mongodbUrl = 'mongodb://localhost:27017/chat';
-MongoClient.connect(mongodbUrl, function(err, db) {
+mongoose.connect(mongodbUrl);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
   console.log("Connected correctly to server");
-  var rooms = db.collection('rooms');
+  var Schema = mongoose.Schema;
+  var roomSchema = new Schema({
+    name: String,
+    msgs: [{
+      name: String,
+      text: String
+    }]
+  });
+  var Room = mongoose.model('Room', roomSchema)
 
   // res.render で省略するデフォルトの拡張子を設定
   app.set('view engine', 'ejs');
@@ -35,7 +45,7 @@ MongoClient.connect(mongodbUrl, function(err, db) {
   }));
 
   app.get('/', function(req, res) {
-    rooms.find({}).toArray(function(err, rooms) {
+    Room.find(function(err, rooms) {
       if (!req.session.name) {
         req.session.name = "anonymous";
       }
@@ -52,18 +62,18 @@ MongoClient.connect(mongodbUrl, function(err, db) {
   });
 
   app.post('/rooms', function(req, res) {
-    rooms.insert({
-        name: req.body.roomName,
-        msgs: []
-      },
-      function(err, result) {
-        res.redirect('/');
-      });
+    var room = new Room({
+      name: req.body.roomName,
+      msgs: []
+    });
+    room.save(function(err, room) {
+      res.redirect('/');
+    });
   });
 
   app.get('/rooms/:id', function(req, res) {
-    rooms.findOne({
-      '_id': mongodb.ObjectID(req.params.id)
+    Room.findOne({
+      _id: req.params.id
     }, function(err, room) {
       if (!req.session.name) {
         req.session.name = "anonymous";
@@ -76,20 +86,14 @@ MongoClient.connect(mongodbUrl, function(err, db) {
   });
 
   app.post('/rooms/:id', function(req, res) {
-    rooms.findOne({
-      '_id': mongodb.ObjectID(req.params.id)
+    Room.findOne({
+      _id: req.params.id
     }, function(err, room) {
       room.msgs.push({
         name: req.body.name,
         text: req.body.message
       });
-      rooms.update({
-        '_id': mongodb.ObjectID(req.params.id)
-      }, {
-        $set: {
-          msgs: room.msgs
-        }
-      }, function(err, result) {
+      room.save(function(err, room) {
         res.redirect('/rooms/' + req.params.id);
       });
     });
