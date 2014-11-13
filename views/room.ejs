@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= room.name %></title>
+</head>
+
+<body>
+  <div>
+    <% for (var i = 0; i < room.msgs.length; i++) { %>
+      <div>
+        <span><%= room.msgs[i].name %>:</span>
+        <span><%= room.msgs[i].text %></span>
+      </div>
+      <% } %>
+  </div>
+  <br />
+
+  <form action="/rooms/<%= room._id %>" method="post">
+    <input type="hidden" name="name" value="<%= name %>">
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message">
+    <input type="submit" name="dir" value="Send">
+  </form>
+  <br />
+
+  <a href="/">トップへ戻る</a>
+</body>
+
+</html>
