@@ -9,7 +9,7 @@ function createData(params) {
   return ret;
 }
 
-function sendHttpRequest(host, port, request) {
+function sendHttpRequest(host, port, request, callback) {
   var socket = net.connect(port, host, function() {
     var rawResponse = "";
 
@@ -29,6 +29,7 @@ function sendHttpRequest(host, port, request) {
     socket.on('end', function() {
       console.log("----------- Response -----------");
       console.log(rawResponse);
+      if (callback) callback();
     });
   });
 }
@@ -48,8 +49,8 @@ function createPostRequest(host, path, params) {
 }
 
 // sendHttpRequest を複数回書かないように
-//req = createPostRequest("localhost", "/maze", { from: 3, dir: "right" });
-//sendHttpRequest("localhost", 3000, req);
-
-req = createGetRequest("localhost", "/maze", { from: 3, dir: "right" });
-sendHttpRequest("localhost", 3000, req);
+var req1 = createPostRequest("localhost", "/maze", { from: 3, dir: "right" });
+var req2 = createGetRequest("localhost", "/maze", { from: 3, dir: "right" });
+sendHttpRequest("localhost", 3000, req1, function() {
+  sendHttpRequest("localhost", 3000, req2);
+});
