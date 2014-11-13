@@ -1,6 +1,6 @@
 var express = require('express'),
   bodyParser = require('body-parser'),
-  MongoClient = require('mongodb').MongoClient
+  MongoClient = require('mongodb').MongoClient,
   app = express();
 
 // 以下のディレクトリを手動で作成
@@ -17,25 +17,35 @@ MongoClient.connect(mongodbUrl, function(err, db) {
   app.set('view engine', 'ejs');
 
   // POSTデータをパースするミドルウェアを設定
-  app.use(bodyParser.json({ extended: true }));
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json({
+    extended: true
+  }));
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 
   app.get('/', function(req, res) {
     messages.find({}).toArray(function(err, messages) {
       res.render('index', {
-        msgs: messages
+        msgs: messages,
+        name: ''
       });
     });
   });
 
   app.post('/', function(req, res) {
-    messages.insert({ text: req.body.message }, function(err, result) {
-      messages.find({}).toArray(function(err, messages) {
-        res.render('index', {
-          msgs: messages
+    messages.insert({
+        name: req.body.name,
+        text: req.body.message
+      },
+      function(err, result) {
+        messages.find({}).toArray(function(err, messages) {
+          res.render('index', {
+            msgs: messages,
+            name: req.body.name
+          });
         });
       });
-    });
   });
 
   var server = app.listen(3000, function() {

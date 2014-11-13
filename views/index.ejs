@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>My Web Apps</title>
-  </head>
-  <body>
-    <div>
-      <% for (var i = 0; i < msgs.length; i++) { %>
-        <div><%= msgs[i].text %></div>
-      <% } %>
-    </div>
 
-    <form action="/" method="post">
-      <input type="text" name="message">
-      <input type="submit" name="dir" value="Send">
-    </form>
-  </body>
+<head>
+  <title>My Web Apps</title>
+</head>
+
+<body>
+  <div>
+    <% for (var i=0 ; i < msgs.length; i++) { %>
+      <div>
+        <span><%= msgs[i].name %>:</span>
+        <span><%= msgs[i].text %></span>
+      </div>
+      <% } %>
+  </div>
+  <br />
+
+  <form action="/" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<%= name %>">
+    <br />
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message">
+    <br />
+    <input type="submit" name="dir" value="Send">
+  </form>
+</body>
+
 </html>
