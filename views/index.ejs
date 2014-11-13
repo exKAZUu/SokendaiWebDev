@@ -2,10 +2,20 @@
 <html>
 
 <head>
-  <title>My Web Apps</title>
+  <title>My Chat Apps</title>
 </head>
 
 <body>
+  <div>
+    ようこそ <span><%= name %></span> さん！
+    <form action="/name" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="<%= name %>">
+      <input type="submit" name="dir" value="Change">
+    </form>
+  </div>
+  <br />
+
   <div>
     <% for (var i=0 ; i < msgs.length; i++) { %>
       <div>
@@ -17,9 +27,7 @@
   <br />
 
   <form action="/" method="post">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="<%= name %>">
-    <br />
+    <input type="hidden" name="name" value="<%= name %>">
     <label for="message">Message:</label>
     <input type="text" id="message" name="message">
     <br />

@@ -1,7 +1,9 @@
 var express = require('express'),
   bodyParser = require('body-parser'),
   MongoClient = require('mongodb').MongoClient,
-  app = express();
+  app = express(),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo')(session);
 
 // 以下のディレクトリを手動で作成
 // Windows: c:\data\db ディレクトリを事前に作成
@@ -23,12 +25,22 @@ MongoClient.connect(mongodbUrl, function(err, db) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
+  // セッションを利用するための設定
+  app.use(session({
+    secret: 'please_change_this_secret',
+    store: new MongoStore({
+      db: 'chat',
+    })
+  }));
 
   app.get('/', function(req, res) {
     messages.find({}).toArray(function(err, messages) {
+      if (!req.session.name) {
+        req.session.name = "anonymous";
+      }
       res.render('index', {
         msgs: messages,
-        name: ''
+        name: req.session.name
       });
     });
   });
@@ -39,13 +51,13 @@ MongoClient.connect(mongodbUrl, function(err, db) {
         text: req.body.message
       },
       function(err, result) {
-        messages.find({}).toArray(function(err, messages) {
-          res.render('index', {
-            msgs: messages,
-            name: req.body.name
-          });
-        });
+        res.redirect('/');
       });
+  });
+
+  app.post('/name', function(req, res) {
+    req.session.name = req.body.name;
+    res.redirect('/');
   });
 
   var server = app.listen(3000, function() {
