@@ -13,7 +13,7 @@
         (
         <span><%= room.msgs[i].created_at %></span>
         ):
-        <span><%= room.msgs[i].text %></span>
+        <span style="color:<%= room.msgs[i].color %>"><%= room.msgs[i].text %></span>
       </div>
       <% } %>
   </div>
@@ -23,6 +23,10 @@
     <input type="hidden" name="name" value="<%= name %>">
     <label for="message">Message:</label>
     <input type="text" id="message" name="message">
+    <input type="radio" name="color" value="black" checked="checked">黒
+    <input type="radio" name="color" value="red">赤
+    <input type="radio" name="color" value="green">緑
+    <input type="radio" name="color" value="blue">青
     <input type="submit" name="dir" value="Send">
   </form>
   <br />

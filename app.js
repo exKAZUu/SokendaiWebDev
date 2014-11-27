@@ -22,6 +22,7 @@ db.once('open', function() {
     msgs: [{
       name: String,
       text: String,
+      color: { type: String, default: 'black' },
       created_at: Date
     }]
   });
@@ -108,6 +109,7 @@ db.once('open', function() {
       room.msgs.push({
         name: req.body.name,
         text: req.body.message,
+        color: req.body.color,
         created_at: Date.now()
       });
       room.save(function(err, room) {
