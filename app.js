@@ -45,58 +45,81 @@ db.once('open', function() {
   }));
 
   app.get('/', function(req, res) {
-    Room.find(function(err, rooms) {
-      if (!req.session.name) {
-        req.session.name = "anonymous";
-      }
-      res.render('index', {
-        name: req.session.name,
-        rooms: rooms
-      });
-    });
+    if (!req.session.name) {
+      res.render('login', {});
+    } else {
+      res.redirect('/rooms');
+    }
   });
 
-  app.post('/name', function(req, res) {
+  app.post('/login', function(req, res) {
     req.session.name = req.body.name;
+    res.redirect('/rooms');
+  });
+
+  app.post('/logout', function(req, res) {
+    req.session.destroy();
     res.redirect('/');
   });
 
-  app.post('/rooms', function(req, res) {
-    var room = new Room({
-      name: req.body.roomName,
-      msgs: []
-    });
-    room.save(function(err, room) {
+  app.get('/rooms', function(req, res) {
+    if (!req.session.name) {
       res.redirect('/');
-    });
+    } else {
+      Room.find(function(err, rooms) {
+        res.render('index', {
+          name: req.session.name,
+          rooms: rooms
+        });
+      });
+    }
+  });
+
+  app.post('/rooms', function(req, res) {
+    if (!req.session.name) {
+      res.redirect('/');
+    } else {
+      var room = new Room({
+        name: req.body.roomName,
+        msgs: []
+      });
+      room.save(function(err, room) {
+        res.redirect('/rooms');
+      });
+    }
   });
 
   app.get('/rooms/:id', function(req, res) {
-    Room.findOne({
-      _id: req.params.id
-    }, function(err, room) {
-      if (!req.session.name) {
-        req.session.name = "anonymous";
-      }
-      res.render('room', {
-        name: req.session.name,
-        room: room
+    if (!req.session.name) {
+      res.redirect('/');
+    } else {
+      Room.findOne({
+        _id: req.params.id
+      }, function(err, room) {
+        res.render('room', {
+          name: req.session.name,
+          room: room
+        });
       });
-    });
+    }
   });
 
   app.post('/rooms/:id', function(req, res) {
-    Room.findOne({
-      _id: req.params.id
-    }, function(err, room) {
-      room.msgs.push({
-        name: req.body.name,
-        text: req.body.message
+    if (!req.session.name) {
+      res.redirect('/');
+    } else {
+      Room.findOne({
+        _id: req.params.id
+      }, function(err, room) {
+        room.msgs.push({
+          name: req.body.name,
+          text: req.body.message
+        });
+        room.save(function(err, room) {
+          res.redirect('/rooms/' + req.params.id);
+        });
       });
-      room.save(function(err, room) {
-        res.redirect('/rooms/' + req.params.id);
-      });
-    });
+    }
   });
 
   var server = app.listen(3000, function() {
