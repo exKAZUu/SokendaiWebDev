@@ -9,7 +9,10 @@
   <div>
     <% for (var i = 0; i < room.msgs.length; i++) { %>
       <div>
-        <span><%= room.msgs[i].name %>:</span>
+        <span><%= room.msgs[i].name %></span>
+        (
+        <span><%= room.msgs[i].created_at %></span>
+        ):
         <span><%= room.msgs[i].text %></span>
       </div>
       <% } %>

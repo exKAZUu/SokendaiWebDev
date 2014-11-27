@@ -21,7 +21,8 @@ db.once('open', function() {
     name: String,
     msgs: [{
       name: String,
-      text: String
+      text: String,
+      created_at: Date
     }]
   });
   var Room = mongoose.model('Room', roomSchema)
@@ -106,7 +107,8 @@ db.once('open', function() {
     }, function(err, room) {
       room.msgs.push({
         name: req.body.name,
-        text: req.body.message
+        text: req.body.message,
+        created_at: Date.now()
       });
       room.save(function(err, room) {
         res.redirect('/rooms/' + req.params.id);
