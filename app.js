@@ -3,6 +3,8 @@ var express = require('express'),
   mongoose = require('mongoose'),
   session = require('express-session'),
   MongoStore = require('connect-mongo')(session),
+  ejs = require('ejs'),
+  moment = require('moment'),
   app = express();
 
 // 以下のディレクトリを手動で作成
@@ -30,6 +32,10 @@ db.once('open', function() {
 
   // res.render で省略するデフォルトの拡張子を設定
   app.set('view engine', 'ejs');
+
+  ejs.filters.formatDate = function(date) {
+    return moment(date).format('MM/DD/YYYY HH:mm:ss');
+  }
 
   // POSTデータをパースするミドルウェアを設定
   app.use(bodyParser.json({
