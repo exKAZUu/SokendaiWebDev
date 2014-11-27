@@ -14,7 +14,7 @@
     <% for (var i = 0; i < rooms.length; i++) { %>
       <li>
         <a href="/rooms/<%= rooms[i]._id %>">
-          <%= rooms[i].name %>
+          <%= rooms[i].name %> (<%= rooms[i].msgs.length %>)
         </a>
       </li>
     <% } %>
