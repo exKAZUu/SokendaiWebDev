@@ -3,10 +3,28 @@
 
 <head>
   <title><%= room.name %></title>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    // JQuery のロードが終わったら呼び出される$();の中の関数が呼び出される
+    $(function () {
+      var socket = io();
+      socket.emit('join', { roomId: '<%= room._id %>', name: '<%= name %>' });
+      $('#chat').submit(function() {
+        msgObj = { text: $('#message').val(), color: 'black' };
+        socket.emit('message', msgObj);
+        $('#message').val('');
+        return false;
+      });
+      socket.on('message', function(msgObj) {
+        $('#messages').append($('<div>').text(msgObj.text));
+      });
+    });
+    </script>
 </head>
 
 <body>
-  <div>
+  <div id="messages">
     <% for (var i = 0; i < room.msgs.length; i++) { %>
       <div>
         <span><%= room.msgs[i].name %></span>
@@ -17,22 +35,21 @@
   </div>
   <br />
 
-  <form action="/rooms/<%= room._id %>" method="post">
-    <input type="hidden" name="name" value="<%= name %>">
+  <form id="chat">
     <label for="message">Message:</label>
     <input type="text" id="message" name="message">
     <input type="radio" name="color" value="black" checked="checked">黒
     <input type="radio" name="color" value="red">赤
     <input type="radio" name="color" value="green">緑
     <input type="radio" name="color" value="blue">青
-    <input type="submit" name="dir" value="Send">
+    <input type="submit" value="Send">
   </form>
   <br />
 
   <a href="/rooms">部屋の一覧</a>
 
   <form action="/logout" method="post">
-    <input type="submit" name="dir" value="Logout">
+    <input type="submit" value="Logout">
   </form>
 </body>
 

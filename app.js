@@ -5,7 +5,9 @@ var express = require('express'),
   MongoStore = require('connect-mongo')(session),
   ejs = require('ejs'),
   moment = require('moment'),
-  app = express();
+  app = express()
+  http = require('http').Server(app),
+  io = require('socket.io')(http);
 
 // 以下のディレクトリを手動で作成
 // Windows: c:\data\db ディレクトリを事前に作成
@@ -124,7 +126,32 @@ db.once('open', function() {
     });
   });
 
-  var server = app.listen(3000, function() {
+  io.on('connection', function(socket) {
+    var join;
+    console.log('a user connected');
+    socket.on('join', function(_join) {
+      console.log('join: ', _join);
+      socket.join(_join.roomId);
+      join = _join;
+    });
+    socket.on('message', function(msgObj) {
+      console.log('message: ', msgObj);
+      Room.findOne({
+        _id: join.roomId
+      }, function(err, room) {
+        msgObj.name = join.name;
+        msgObj.created_at = Date.now();
+        room.msgs.push(msgObj);
+        room.save();
+        io.to(join.roomId).emit('message', msgObj);
+      });
+    });
+    socket.on('disconnect', function() {
+      console.log('user disconnected');
+    });
+  });
+
+  var server = http.listen(3000, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('Server running at http://%s:%s', host, port);
