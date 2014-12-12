@@ -5,7 +5,7 @@ var express = require('express'),
   MongoStore = require('connect-mongo')(session),
   ejs = require('ejs'),
   moment = require('moment'),
-  app = express()
+  app = express(),
   http = require('http').Server(app),
   io = require('socket.io')(http);
 
