@@ -27,20 +27,15 @@
         $('#messages').append($(dom));
       }
       socket.on('message', addMessage);
+      <% for (var i = 0; i < room.msgs.length; i++) { %>
+        addMessage(<%- JSON.stringify(room.msgs[i]) %>);
+      <% } %>
     });
     </script>
 </head>
 
 <body>
-  <div id="messages">
-    <% for (var i = 0; i < room.msgs.length; i++) { %>
-      <div>
-        <span><%= room.msgs[i].name %></span>
-        (<span><%=: room.msgs[i].created_at | formatDate %></span>):
-        <span style="color:<%= room.msgs[i].color %>"><%= room.msgs[i].text %></span>
-      </div>
-    <% } %>
-  </div>
+  <div id="messages"></div>
   <br />
 
   <form id="chat">

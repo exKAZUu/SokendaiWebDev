@@ -35,10 +35,6 @@ db.once('open', function() {
   // res.render で省略するデフォルトの拡張子を設定
   app.set('view engine', 'ejs');
 
-  ejs.filters.formatDate = function(date) {
-    return moment(date).format('MM/DD/YYYY HH:mm:ss');
-  }
-
   // POSTデータをパースするミドルウェアを設定
   app.use(bodyParser.json({
     extended: true
@@ -106,22 +102,6 @@ db.once('open', function() {
       res.render('room', {
         name: req.session.name,
         room: room
-      });
-    });
-  });
-
-  app.post('/rooms/:id', function(req, res) {
-    Room.findOne({
-      _id: req.params.id
-    }, function(err, room) {
-      room.msgs.push({
-        name: req.body.name,
-        text: req.body.message,
-        color: req.body.color,
-        created_at: Date.now()
-      });
-      room.save(function(err, room) {
-        res.redirect('/rooms/' + req.params.id);
       });
     });
   });
