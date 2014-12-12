@@ -12,7 +12,7 @@
       var socket = io();
       socket.emit('join', { roomId: '<%= room._id %>', name: '<%= name %>' });
       $('#chat').submit(function() {
-        msgObj = { text: $('#message').val(), color: 'black' };
+        msgObj = { text: $('#message').val(), color: $("input[name='color']:checked").val() };
         socket.emit('message', msgObj);
         $('#message').val('');
         return false;
