@@ -5,6 +5,7 @@
   <title><%= room.name %></title>
   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
   <script>
     // JQuery のロードが終わったら呼び出される$();の中の関数が呼び出される
     $(function () {
@@ -16,9 +17,16 @@
         $('#message').val('');
         return false;
       });
-      socket.on('message', function(msgObj) {
-        $('#messages').append($('<div>').text(msgObj.text));
-      });
+      var addMessage = function(msgObj) {
+        var dom = '';
+        dom += '<div>';
+        dom += '<span>' + msgObj.name + '</span> '
+        dom += '(<span>' + moment(msgObj.created_at).format('MM/DD/YYYY HH:mm:ss') + '</span>): '
+        dom += '<span style="color:' + msgObj.color + '">' + msgObj.text + '</span>'
+        dom += '</div>'
+        $('#messages').append($(dom));
+      }
+      socket.on('message', addMessage);
     });
     </script>
 </head>
