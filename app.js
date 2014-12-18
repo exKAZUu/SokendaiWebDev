@@ -50,6 +50,10 @@ db.once('open', function() {
     })
   }));
 
+  app.get('/test', function(req, res) {
+    res.render('test.jade', { title : 'Home' });
+  });
+
   app.get('/', function(req, res) {
     if (!req.session.name) {
       res.render('login', {});
