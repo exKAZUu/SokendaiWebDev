@@ -1,0 +1,54 @@
+doctype
+html
+  head
+    title #{room.name}
+    script(src="https://cdn.socket.io/socket.io-1.2.0.js")
+    script(src="http://code.jquery.com/jquery-1.11.1.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js")
+    script
+      | // JQuery のロードが終わったら呼び出される$();の中の関数が呼び出される
+      | $(function () {
+      |   var socket = io();
+      |   socket.emit('join', { roomId: '!{room._id}', name: '!{name}' });
+      |   $('#chat').submit(function() {
+      |     msgObj = { text: $('#message').val(), color: $("input[name='color']:checked").val() };
+      |     socket.emit('message', msgObj);
+      |     $('#message').val('');
+      |     return false;
+      |   });
+      |   var addMessage = function(msgObj) {
+      |     var dom = '';
+      |     dom += '<div>';
+      |     dom += '<span>' + msgObj.name + '</span> '
+      |     dom += '(<span>' + moment(msgObj.created_at).format('MM/DD/YYYY HH:mm:ss') + '</span>): '
+      |     dom += '<span style="color:' + msgObj.color + '">' + msgObj.text + '</span>'
+      |     dom += '</div>'
+      |     $('#messages').append($(dom));
+      |   }
+      |   socket.on('message', addMessage);
+      - for (var i = 0; i < room.msgs.length; i++)
+        | addMessage(!{JSON.stringify(room.msgs[i])});
+      | });
+
+  body
+    #messages
+    br
+
+    form#chat
+      label(for="message") Message:
+      input#message(type="text", name="message")
+      input(type="radio", name="color", value="black", checked="checked")
+      | 黒
+      input(type="radio", name="color", value="red")
+      | 赤
+      input(type="radio", name="color", value="green")
+      | 緑
+      input(type="radio", name="color", value="blue")
+      | 青
+      input(type="submit", value="Send")
+    br
+
+    a(href="/rooms") 部屋の一覧
+
+    form(action="/logout", method="post")
+      input(type="submit", value="Logout")

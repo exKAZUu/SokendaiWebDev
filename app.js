@@ -33,7 +33,7 @@ db.once('open', function() {
   var Room = mongoose.model('Room', roomSchema)
 
   // res.render で省略するデフォルトの拡張子を設定
-  app.set('view engine', 'ejs');
+  app.set('view engine', 'jade');
 
   // POSTデータをパースするミドルウェアを設定
   app.use(bodyParser.json({
@@ -49,10 +49,6 @@ db.once('open', function() {
       db: 'chat',
     })
   }));
-
-  app.get('/test', function(req, res) {
-    res.render('test.jade', { title : 'Home' });
-  });
 
   app.get('/', function(req, res) {
     if (!req.session.name) {
