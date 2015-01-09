@@ -3,23 +3,25 @@ var express = require('express'),
   mongoose = require('mongoose'),
   session = require('express-session'),
   MongoStore = require('connect-mongo')(session),
-  ejs = require('ejs'),
   moment = require('moment'),
   app = express(),
   http = require('http').Server(app),
   io = require('socket.io')(http);
+
+var port = process.env.PORT || 3000;
 
 // 以下のディレクトリを手動で作成
 // Windows: c:\data\db ディレクトリを事前に作成
 // Mac OS / Linux: /data/db ディレクトリを事前に作成
 // Windowsは C:\Program Files\MongoDB 2.6 Standard\bin にパスを通す
 // 次のコマンドでMongoDBを起動 mongod --port 27017
-var mongodbUrl = 'mongodb://localhost:27017/chat';
+var mongodbUrl = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/chat';
 mongoose.connect(mongodbUrl);
+
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log("Connected correctly to server");
+  console.log("Connected correctly to MongoDB server.");
   var Schema = mongoose.Schema;
   var roomSchema = new Schema({
     name: String,
@@ -46,7 +48,7 @@ db.once('open', function() {
   app.use(session({
     secret: 'please_change_this_secret',
     store: new MongoStore({
-      db: 'chat',
+      mongooseConnection: db
     })
   }));
 
@@ -131,7 +133,7 @@ db.once('open', function() {
     });
   });
 
-  var server = http.listen(3000, function() {
+  var server = http.listen(port, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('Server running at http://%s:%s', host, port);
