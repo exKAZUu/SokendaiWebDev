@@ -1,10 +1,8 @@
-doctype
-html
-  head
-    title My Chat Apps
-  body
-    div
-      form(action="/login", method="post")
-        label(for="name") Name: 
-        input#name(type="text", name="name")
-        input(type="submit", value="Login")
+extends ./layout.jade
+
+block content
+  div
+    form(action="/login", method="post")
+      label(for="name") Name:
+      input#name(type="text", name="name")
+      input(type="submit", value="Login")

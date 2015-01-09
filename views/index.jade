@@ -1,22 +1,16 @@
-doctype
-html
-  head
-    title My Chat Apps
-  body
-    div
-      | ようこそ
-      span= name
-      | さん！
-    ul
-      - for (var i = 0; i < rooms.length; i++)
-        li
-          a(href='/rooms/' + rooms[i]._id)
-            | #{rooms[i].name} (#{rooms[i].msgs.length})
+extends ./layout.jade
 
-    form(action="/rooms", method="post")
-      label(for="roomName") Room Name: 
-      input#roomName(type="text", name="roomName")
-      input(type="submit", value="Create")
+block content
+  ul
+    - for (var i = 0; i < rooms.length; i++)
+      li
+        a(href='/rooms/' + rooms[i]._id)
+          | #{rooms[i].name} (#{rooms[i].msgs.length})
 
-    form(action="/logout", method="post")
-      input(type="submit", value="Logout")
+  form(action="/rooms", method="post")
+    label(for="roomName") Room Name:
+    input#roomName(type="text", name="roomName")
+    input(type="submit", value="Create")
+
+  form(action="/logout", method="post")
+    input(type="submit", value="Logout")
