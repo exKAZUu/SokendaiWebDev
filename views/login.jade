@@ -2,7 +2,8 @@ extends ./layout.jade
 
 block content
   div
-    form(action="/login", method="post")
-      label(for="name") Name:
-      input#name(type="text", name="name")
-      input(type="submit", value="Login")
+    form.col-sm-8(action="/login", method="post")
+      div.form-group
+        label(for="name") Name:
+        input.form-control#name(type="text", name="name")
+      input.btn.btn-primary(type="submit", value="Login")

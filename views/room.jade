@@ -34,20 +34,24 @@ block content
   br
 
   form#chat
-    label(for="message") Message:
-    input#message(type="text", name="message")
-    input(type="radio", name="color", value="black", checked="checked")
-    | 黒
-    input(type="radio", name="color", value="red")
-    | 赤
-    input(type="radio", name="color", value="green")
-    | 緑
-    input(type="radio", name="color", value="blue")
-    | 青
-    input(type="submit", value="Send")
+    div.form-group
+      label(for="message") Message:
+      div.col-xs-8.input-group
+        input.form-control#message(type="text", name="message")
+        span.input-group-btn
+          input.btn.btn-primary(type="submit", value="Send")
+      label.radio-inline
+        input(type="radio", name="color", value="black", checked="checked")
+        | 黒
+      label.radio-inline
+        input(type="radio", name="color", value="red")
+        | 赤
+      label.radio-inline
+        input(type="radio", name="color", value="green")
+        | 緑
+      label.radio-inline
+        input(type="radio", name="color", value="blue")
+        | 青
   br
 
-  a(href="/rooms") 部屋の一覧
-
-  form(action="/logout", method="post")
-    input(type="submit", value="Logout")
+  a.btn.btn-default(href="/rooms") 部屋の一覧
