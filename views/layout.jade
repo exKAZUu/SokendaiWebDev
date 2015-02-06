@@ -1,9 +1,11 @@
 doctype html
 html
   head
+    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css", rel="stylesheet")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
     block title
       title My Chat App on Heroku
-    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css", rel="stylesheet")
   body
     nav(class="navbar navbar-default")
       div(class="container-fluid")
@@ -65,5 +67,3 @@ html
         span= name
         | さん！
     block content
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js")
